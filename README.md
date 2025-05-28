@@ -1,4 +1,3 @@
-# Project Brief: Integrate Local LLMs with Docker Model Runner
 
 ## 📌 Project Name: `LocalGPT Assistant – Docker Model Runner Edition`
 
@@ -152,11 +151,8 @@ Visit:
 
 By the end of this project, you’ll:
 
-✅ Understand **how Docker Model Runner manages and runs LLMs locally**
-✅ Replace hosted LLM APIs with **local inference endpoints**
-✅ Learn how to **package model providers in Docker Compose**
-✅ Build confidence in **open-source model deployment workflows**
+✅ Understand **how Docker Model Runner manages and runs LLMs locally**  
+✅ Replace hosted LLM APIs with **local inference endpoints**  
+✅ Learn how to **package model providers in Docker Compose**  
+✅ Build confidence in **open-source model deployment workflows**  
 
----
-
-Would you like me to generate a sample `README.md`, screenshots, or add bonus extensions like switching models or benchmarking local inference?
