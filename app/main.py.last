@@ -1,0 +1,23 @@
+from fastapi import FastAPI, Request
+import requests
+
+# ✅ Create FastAPI app instance before using it
+app = FastAPI()
+
+# 🔁 URL of the local LLM model runner (adjust if needed)
+LLM_URL = "http://local-llm:11434/api/generate"
+
+@app.post("/chat")
+async def chat(req: Request):
+    """
+    Accepts a POST request with a JSON payload containing a 'prompt',
+    forwards it to the local LLM endpoint, and returns the generated response.
+    """
+    data = await req.json()
+    prompt = data.get("prompt")
+    
+    # 📨 Send request to local model
+    response = requests.post(LLM_URL, json={"prompt": prompt, "stream": False})
+    
+    # 🧾 Return model's response as JSON
+    return response.json()
