@@ -1,9 +1,17 @@
 services:
+  model:
+    provider:
+      type: model
+      options:
+        model: ai/smollm2
+
   fastapi:
     build:
       context: ./app
     ports:
       - "8000:8000"
+    depends_on:
+      - model
 
   ui:
     build:
@@ -12,3 +20,4 @@ services:
       - "8501:8501"
     depends_on:
       - fastapi
+
