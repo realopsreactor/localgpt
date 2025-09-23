@@ -1,23 +1,47 @@
 services:
-  model:
-    provider:
-      type: model
-      options:
-        model: ai/smollm2
+  llm: # vLLM OpenAI-compatible server
+    image: vllm/vllm-openai:latest
+    command: >
+      --model HuggingFaceTB/SmolLM2-1.7B-Instruct
+      --max-model-len 8192
+      --host 0.0.0.0
+      --port 8000
+    environment:
+      - HF_TOKEN=${HF_TOKEN:-}     # only needed for gated models
+    ports:
+      - "8001:8000"                # host:container
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    # for local docker compose on an NVIDIA GPU:
+    deploy:                          # if you use Swarm; otherwise use `gpus: all` below
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+    # comment the deploy block above and uncomment this line for plain docker compose:
+    # gpus: all
 
   fastapi:
     build:
       context: ./app
+    environment:
+      - OPENAI_BASE_URL=http://llm:8000/v1
+      - OPENAI_API_KEY=dev-key             # vLLM accepts any non-empty key
+      - MODEL=HuggingFaceTB/SmolLM2-1.7B-Instruct
+    depends_on:
+      - llm
     ports:
       - "8000:8000"
-    depends_on:
-      - model
 
   ui:
     build:
       context: ./ui
-    ports:
-      - "8501:8501"
+    environment:
+      - API_URL=http://fastapi:8000
     depends_on:
       - fastapi
+    ports:
+      - "8501:8501"
 
+volumes:
+  hf_cache:
